@@ -13,7 +13,7 @@ stop = stopwords.words('english')
 # http://www.winwaed.com/blog/2011/11/08/part-of-speech-tags/
 NOUNS = ['NN', 'NNS', 'NNP', 'NNPS']
 VERBS = ['VB', 'VBG', 'VBD', 'VBN', 'VBP', 'VBZ']
-
+title = ''
 def download_document(url):
     """Downloads document using BeautifulSoup, extracts the subject and all
     text stored in paragraph tags
@@ -71,8 +71,7 @@ def extract_subject(document):
     # and most frequent nouns. It takes the first element in the list
     subject_nouns = [entity for entity in top_10_entities
                     if entity.split()[0] in most_freq_nouns]
-    print (subject_nouns)
-    return subject_nouns[0]
+    return subject_nouns
 
 def merge_multi_word_subject(sentences, subject):
     """Merges multi word subjects into one single token
@@ -97,10 +96,12 @@ def get_subject(link):
     url = link
 #'https://www.usatoday.com/story/news/world/2018/02/19/donald-trump-jr-s-trip-india-could-mix-business-and-u-s-foreign-policy/352127002/'
     document = download_document(url)
+    #link is the LINK
     # document = pickle.load(open('document.pkl', 'rb'))
-
-    #print (document)
+    #This is the title print(title)
+    # THIS IS THE ARTICLE print (document)
     document = clean_document(document)
-    subject = extract_subject(document)
+    subjects[] = extract_subject(document)
+    #THIS IS THE LIST OF TAGS returned
     return subject;
 
