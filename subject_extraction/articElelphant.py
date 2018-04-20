@@ -41,6 +41,11 @@ def echo_all(updates):
     for update in updates["result"]:
         text = update["message"]["text"]
         chat = update["message"]["chat"]["id"]
+        if (text.startswith( 'tag' ) or text.startswith( 'Tag' )):
+               #DO SOMETHING WITH TAG
+               #REMOVE THIS LINE
+               send_message("Tag recieved: "+text.split()[1], chat);
+               return
         value = sub.get_subject(text)
         send_message("The subject is "+value, chat)
 

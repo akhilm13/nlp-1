@@ -100,7 +100,7 @@ def get_subject(link):
     #This is the title print(title)
     # THIS IS THE ARTICLE print (document)
     document = clean_document(document)
-    subjects[] = extract_subject(document)
+    subjects = extract_subject(document)
     #THIS IS THE LIST OF TAGS returned
-    return subject;
+    return subjects;
 
