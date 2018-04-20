@@ -42,8 +42,8 @@ def echo_all(updates):
         text = update["message"]["text"]
         chat = update["message"]["chat"]["id"]
         if (text.startswith( 'tag' ) or text.startswith( 'Tag' )):
-               #DO SOMETHING WITH TAG
-               #REMOVE THIS LINE
+               #THIS TAG text.split()[1] should be used to query the database and return a list of artciles
+               #REMOVE THIS LINE BELOW AND CODE TO CONNECT TO DATABASE. SEND THE RESULT USING SEND_MESSAGE
                send_message("Tag recieved: "+text.split()[1], chat);
                return
         value = sub.get_subject(text)
