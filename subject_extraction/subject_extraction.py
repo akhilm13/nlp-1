@@ -9,8 +9,7 @@ from nltk.corpus import stopwords
 stop = stopwords.words('english')
 
 # Noun Part of Speech Tags used by NLTK
-# More can be found here
-# http://www.winwaed.com/blog/2011/11/08/part-of-speech-tags/
+
 NOUNS = ['NN', 'NNS', 'NNP', 'NNPS']
 VERBS = ['VB', 'VBG', 'VBD', 'VBN', 'VBP', 'VBZ']
 
