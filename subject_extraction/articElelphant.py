@@ -3,6 +3,7 @@ import requests
 import time
 import urllib
 import os
+import mysql.connector
 import subject_extraction as sub
 
 
@@ -63,6 +64,15 @@ def send_message(text, chat_id):
     url = URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
     get_url(url)
 
+def get_articles_by_tag(tag): #returns the list of articles corresponding to the tags
+    res = []
+    cnx = mysql.connector.connect(user='root', host='127.0.0.1', password="", database='dbadb', port=3306)
+    cursor = cnx.cursor()
+    cursor.execute("select title,content,link from linked_view where tag = '"+tag+"';")
+    for (title, content, link) in cursor:
+        res.append([title, content, link])
+    cnx.close()
+    return res
 
 def main():
     last_update_id = None
