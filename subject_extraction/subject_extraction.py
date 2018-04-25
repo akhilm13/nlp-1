@@ -6,6 +6,7 @@ import re
 import pickle
 import nltk
 from nltk.corpus import stopwords
+import mysql.connector
 stop = stopwords.words('english')
 
 # Noun Part of Speech Tags used by NLTK
@@ -91,7 +92,33 @@ def merge_multi_word_subject(sentences, subject):
                     sentences[i][j] = subject
     return sentences
 
+def put_in_db(title, link, content, subjects):
+    # connecting to db
+    cnx = mysql.connector.connect(user='root', host='127.0.0.1', password="", database='dbadb', port=3306)
+    cursor = cnx.cursor()
+    # querry executing
+    cursor.execute("select new_article('" + title + "','" + content + "','" + link + "')")
+    # adding the article to db and getting its id
+    theid = 0
+    for id in cursor:
+        theid = id
+
+    # adding the tags to db and getting their ids
+    tags = []
+    for s in subjects:
+        cursor.execute("select add_tag('" + s + "'")
+        for id in cursor:
+            tags.append(id)
+
+    # linking in db article with tags
+    for i in tags:
+        cursor.execute("call link_article_tag(" + str(theid) + "," + str(i) + ")")
+    # THIS IS THE LIST OF TAGS returned
+    cnx.close()
+
 def get_subject(link):
+
+
     url = link
 #'https://www.usatoday.com/story/news/world/2018/02/19/donald-trump-jr-s-trip-india-could-mix-business-and-u-s-foreign-policy/352127002/'
     document = download_document(url)
@@ -101,6 +128,9 @@ def get_subject(link):
     # THIS IS THE ARTICLE print (document)
     document = clean_document(document)
     subjects = extract_subject(document)
-    #THIS IS THE LIST OF TAGS returned
-    return subjects;
+
+
+
+
+    return subjects
 
