@@ -18,6 +18,7 @@ def download_document(url):
     """Downloads document using BeautifulSoup, extracts the subject and all
     text stored in paragraph tags
     """
+    global title
     print(url)
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
@@ -92,29 +93,37 @@ def merge_multi_word_subject(sentences, subject):
                     sentences[i][j] = subject
     return sentences
 
-def put_in_db(title, link, content, subjects):
+def put_in_db(link, content, subjects,title = 'No title'):
     # connecting to db
-    cnx = mysql.connector.connect(user='root', host='127.0.0.1', password="", database='dbadb', port=3306)
+    cnx = mysql.connector.connect(user='user', host='127.0.0.1', password="", database='db', port=3306)
     cursor = cnx.cursor()
+    print("select new_article('" + title + "','" + content + "','" + link + "')")
     # querry executing
     cursor.execute("select new_article('" + title + "','" + content + "','" + link + "')")
     # adding the article to db and getting its id
     theid = 0
     for id in cursor:
         theid = id
+        idT =  re.findall(r'\d+', str(id))
+        print(idT[0])
 
     # adding the tags to db and getting their ids
     tags = []
     for s in subjects:
-        cursor.execute("select add_tag('" + s + "'")
+        print("select add_tag('" + s + "';")
+        cursor.execute("select add_tag('" + s + "')")
         for id in cursor:
-            tags.append(id)
+            idsT = re.findall(r'\d+', str(id))   
+            tags.append(idsT[0])
 
     # linking in db article with tags
     for i in tags:
-        cursor.execute("call link_article_tag(" + str(theid) + "," + str(i) + ")")
+        print("call link_article_tag(" + str(idT[0]) + "," + str(i) + ")")
+        print(i)
+        cursor.execute("call link_article_tag(" + str(idT[0]) + "," + str(i) + ")")
     # THIS IS THE LIST OF TAGS returned
-    cnx.close()
+        cnx.commit()
+        #cnx.close()
 
 def get_subject(link):
 
@@ -128,9 +137,10 @@ def get_subject(link):
     # THIS IS THE ARTICLE print (document)
     document = clean_document(document)
     subjects = extract_subject(document)
+    
+    
 
-
-
+    put_in_db(link, document, subjects,title)
 
     return subjects
 

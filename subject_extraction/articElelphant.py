@@ -42,13 +42,20 @@ def echo_all(updates):
     for update in updates["result"]:
         text = update["message"]["text"]
         chat = update["message"]["chat"]["id"]
-        if (text.startswith( 'tag' ) or text.startswith( 'Tag' )):
+        print(text)
+        if (text == "/start"):
+               print('Started')
+        elif (text.startswith( 'tag' ) or text.startswith( 'Tag' )):
                #THIS TAG text.split()[1] should be used to query the database and return a list of artciles
                #REMOVE THIS LINE BELOW AND CODE TO CONNECT TO DATABASE. SEND THE RESULT USING SEND_MESSAGE
-               send_message("Tag recieved: "+text.split()[1], chat);
+               res = get_articles_by_tag(text.split()[1]);
+               for a in res:
+                   for b in a:
+                       send_message("Articles stuff: "+b, chat);
                return
-        value = sub.get_subject(text)
-        send_message("The subject is "+value, chat)
+        else:
+               value = sub.get_subject(text)
+               send_message(" Article added under "+value[0], chat)
 
 
 def get_last_chat_id_and_text(updates):
@@ -66,12 +73,13 @@ def send_message(text, chat_id):
 
 def get_articles_by_tag(tag): #returns the list of articles corresponding to the tags
     res = []
-    cnx = mysql.connector.connect(user='root', host='127.0.0.1', password="", database='dbadb', port=3306)
+    cnx = mysql.connector.connect(user='user', host='127.0.0.1', password="", database='db', port=3306)
     cursor = cnx.cursor()
     cursor.execute("select title,content,link from linked_view where tag = '"+tag+"';")
     for (title, content, link) in cursor:
         res.append([title, content, link])
-    cnx.close()
+    cnx.commit()
+    #cnx.close()
     return res
 
 def main():
